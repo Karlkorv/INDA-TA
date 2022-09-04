@@ -1,55 +1,64 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
-    private File file;
-    List<Person> students;
-    Person.attendance[][] doubleArr;
-    BufferedReader reader;
+    List<String> students;
     BufferedWriter writer;
-    boolean parsedList = false;
+    BufferedReader inputReader;
+    final String FILE_NAME = "attendance.csv";
 
     public Scheduler(String fileName) throws IOException {
-        file = new File(fileName);
-        if (!file.exists()) {
-            throw new IOException("File does not exist");
+        inputReader = new BufferedReader(new FileReader("attendance.csv"));
+        String firstLine = inputReader.readLine();
+
+        if (firstLine.isBlank()) {
+            throw new IOException("First line was blank, exiting");
         }
 
-        students = new ArrayList<>(20);
-        String curLine;
-        reader = new BufferedReader(new FileReader(file));
+        firstLine = firstLine.trim();
+        String[] splitLine = firstLine.split(",");
+        students = new ArrayList<>(splitLine.length);
 
-        curLine = reader.readLine();
-
-        String[] studentList = curLine.split(",");
-        for (String curStr : studentList) {
-            students.add(new Person(curStr));
+        for (String string : splitLine) {
+            students.add(string);
         }
 
-        doubleArr = new Person.attendance[students.size()][52];
+        inputReader.close();
+    }
 
-        while (reader.ready()) {
-            curLine = reader.readLine();
-            String[] splitLine = curLine.split(",");
-            for (int i = 0; i < splitLine.length; i++) {
-                students.get(i).setAttendence(i, convertToEnum(splitLine[i]));
+    public String[] getAttendance() throws IOException {
+        String[] returnArr = new String[students.size()];
+        inputReader = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("Är följande student här? y/n");
+
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println(students.get(i));
+            String readLine = inputReader.readLine().trim().toLowerCase();
+
+            while (readLine != "y" || readLine != "n") {
+                System.out.println("Fel input, svara y/n");
             }
+            returnArr[i] = readLine;
         }
 
-        reader.close();
+        return returnArr;
     }
 
-    public List<Person> getStudents() {
-        return List.copyOf(students);
-    }
+    public void writeAttendance(String[] attendance) throws IOException {
+        writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
-    Person.attendance[][] getAttendance() {
-        return doubleArr;
+        writer.newLine();
+
+        for (int i = 0; i < attendance.length; i++) {
+            writer.write(attendance[i]);
+            if (i + 1 < attendance.length)
+                writer.write(',');
+
+        }
     }
 
     private Person.attendance convertToEnum(String string) {
