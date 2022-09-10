@@ -2,16 +2,17 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
 
 public class Scheduler {
     private List<String> students;
-    private String[] attendingStudents;
+    private List<String> attendingStudents;
+    private String[] attendance;
     private BufferedWriter writer;
     private BufferedReader inputReader;
     private final String FILE_NAME = "attendance.csv";
 
     public Scheduler() throws IOException {
+        attendingStudents = new ArrayList<>();
         inputReader = new BufferedReader(new FileReader("attendance.csv"));
         String firstLine = inputReader.readLine();
 
@@ -30,7 +31,7 @@ public class Scheduler {
     }
 
     public void getAttendance() throws IOException {
-        attendingStudents = new String[students.size()];
+        attendance = new String[students.size()];
         inputReader = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("Är följande student här? y/n");
 
@@ -41,11 +42,14 @@ public class Scheduler {
                 System.out.println("Fel input, svara y/n");
                 readLine = inputReader.readLine().trim().toLowerCase();
             }
-            attendingStudents[i] = readLine;
+            attendance[i] = readLine;
+            if (readLine.equals("y")) {
+                attendingStudents.add(students.get(i));
+            }
         }
     }
 
-    public void writeAttendance(String[] attendance) throws IOException {
+    public void writeAttendance() throws IOException {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
         writer.newLine();
@@ -66,44 +70,40 @@ public class Scheduler {
         }
     }
 
-    public void randomStudent(int groupAmount) {
-        int studentsHere = attendingStudents.length;
-        int groups = studentsHere / groupAmount;
-        int leftovers = 0;
-        if (studentsHere % groups > groupAmount - 1) {
-            groups++;
-        } else if (studentsHere % groups > groupAmount - 1) {
-            leftovers = studentsHere % groups;
-        }
-        String[][] groupArr = new String[groups][groupAmount + 1];
-        List<String> randomList = new ArrayList<>(students);
-        Stack<String> randomStack = new Stack<>();
-        for (String string : randomList) {
-            randomStack.add(string);
+    public void randomStudent(int studentPerGroup) {
+        Collections.shuffle(attendingStudents);
+        int nrOfGroups = attendingStudents.size() / studentPerGroup;
+        int leftOvers = attendingStudents.size() % studentPerGroup;
+        List<List<String>> groups = new ArrayList<>(nrOfGroups);
+
+        for (int i = 0; i < nrOfGroups; i++) {
+            groups.add(new ArrayList<String>());
         }
 
-        Collections.shuffle(randomList);
-        for (int i = 0; i < groupArr.length; i++) {
-            for (int j = 0; j < groupAmount; j++) {
-                if (leftovers > 0 && i + 1 == groupArr.length) {
-                    groupArr[i][groupAmount] = randomStack.pop();
-                } else {
-                    groupArr[i][j] = randomStack.pop();
-                }
-                // TODO: Testa denna skeva setup
-            }
+        for (int i = 0, j = 0; i < attendingStudents.size(); i++, j++) {
+            j = j % nrOfGroups;
+            groups.get(j).add(attendingStudents.get(i));
         }
 
-        for (String[] strings : groupArr) {
-            System.out.println("grupp:");
-            for (String string : strings) {
-                System.out.println(string);
+        System.out.println();
+        System.out.println("Grupper:");
+        for (List<String> list : groups) {
+            for (String student : list) {
+                System.out.println(student);
             }
-            System.out.println("\n");
+            System.out.println();
         }
     }
 
     public static void main(String[] args) {
-        // TODO: Main
+        try {
+            Scheduler scheduler = new Scheduler();
+            scheduler.getAttendance();
+            scheduler.randomStudent(3);
+            scheduler.writeAttendance();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 }
