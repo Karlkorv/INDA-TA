@@ -1,3 +1,7 @@
 *.class
 *.csv
 task-*
+feedback
+tasks
+test*
+*.txt
