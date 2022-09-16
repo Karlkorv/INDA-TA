@@ -49,6 +49,39 @@ public class Scheduler {
         }
     }
 
+    public void readAttendance() {
+        if (attendingStudents.size() > 0)
+            throw new RuntimeException("Tried to get attendance while attendance already set");
+
+        String curLine = "";
+        try {
+            inputReader = new BufferedReader(new FileReader(FILE_NAME));
+            curLine = inputReader.readLine();
+            while (curLine != null) {
+                String newLine = inputReader.readLine();
+
+                if (newLine == null) {
+                    break;
+                } else {
+                    curLine = newLine;
+                }
+
+                inputReader.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+
+        String[] splitLine = curLine.split(",");
+
+        for (int i = 0; i < students.size(); i++) {
+            if (splitLine[i].equals("y")) {
+                attendingStudents.add(students.get(i)); // Add all students from last recorded attendance
+            }
+        }
+    }
+
     public void writeAttendance() throws IOException {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
@@ -73,7 +106,6 @@ public class Scheduler {
     public void randomStudent(int studentPerGroup) {
         Collections.shuffle(attendingStudents);
         int nrOfGroups = attendingStudents.size() / studentPerGroup;
-        int leftOvers = attendingStudents.size() % studentPerGroup;
         List<List<String>> groups = new ArrayList<>(nrOfGroups);
 
         for (int i = 0; i < nrOfGroups; i++) {
@@ -86,7 +118,7 @@ public class Scheduler {
         }
 
         System.out.println();
-        System.out.println("Grupper:");
+        System.out.format("Grupper a %d styck:\n", studentPerGroup);
         for (List<String> list : groups) {
             for (String student : list) {
                 System.out.println(student);
@@ -95,15 +127,20 @@ public class Scheduler {
         }
     }
 
+    private void parseCommands(String[] args) {
+    }
+
     public static void main(String[] args) {
         try {
             Scheduler scheduler = new Scheduler();
             scheduler.getAttendance();
             scheduler.randomStudent(3);
+            scheduler.randomStudent(2);
             scheduler.writeAttendance();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
     }
+
 }
