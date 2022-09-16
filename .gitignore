@@ -5,3 +5,6 @@ feedback
 tasks
 test*
 *.txt
+ovningar
+*.pdf
+.DS_Store
