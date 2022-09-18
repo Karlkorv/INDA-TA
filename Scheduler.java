@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +28,6 @@ public class Scheduler {
         for (String string : splitLine) {
             students.add(string);
         }
-        inputReader.close();
     }
 
     public void getAttendance() throws IOException {
@@ -50,9 +50,6 @@ public class Scheduler {
     }
 
     public void readAttendance() {
-        if (attendingStudents.size() > 0)
-            throw new RuntimeException("Tried to get attendance while attendance already set");
-
         String curLine = "";
         try {
             inputReader = new BufferedReader(new FileReader(FILE_NAME));
@@ -65,8 +62,6 @@ public class Scheduler {
                 } else {
                     curLine = newLine;
                 }
-
-                inputReader.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,16 +122,47 @@ public class Scheduler {
         }
     }
 
-    private void parseCommands(String[] args) {
+    private void parseCommands(String[] args) throws IOException {
+        if (args.length == 0) {
+            printHelp();
+            return;
+        }
+
+        boolean gotAttendance = false;
+
+        // Command precedence:
+        // -get, -read/-r, -group
+
+        List<String> commands = new ArrayList<>(Arrays.asList(args));
+
+        if (commands.contains("get")) {
+            getAttendance();
+            gotAttendance = true;
+        }
+
+        if (!gotAttendance && (commands.contains("read") || commands.contains("r"))) {
+            readAttendance();
+            gotAttendance = true;
+        }
+
+        if (commands.contains("group")) {
+            if (!gotAttendance) {
+                System.out.println("No attendance method specified, reading last");
+                readAttendance();
+                gotAttendance = true;
+            }
+            int groupAmount = Integer.parseInt(commands.get(commands.indexOf("group") + 1));
+            randomStudent(groupAmount);
+        }
+    }
+
+    private void printHelp() {
     }
 
     public static void main(String[] args) {
         try {
             Scheduler scheduler = new Scheduler();
-            scheduler.getAttendance();
-            scheduler.randomStudent(3);
-            scheduler.randomStudent(2);
-            scheduler.writeAttendance();
+            scheduler.parseCommands(args);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
