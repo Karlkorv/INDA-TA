@@ -10,7 +10,7 @@ public class Scheduler {
     private String[] attendance;
     private BufferedWriter writer;
     private BufferedReader inputReader;
-    private final String FILE_NAME = "attendance.csv";
+    private static final String FILE_NAME = "attendance.csv";
 
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
@@ -138,6 +138,7 @@ public class Scheduler {
         if (commands.contains("get")) {
             getAttendance();
             gotAttendance = true;
+            writeAttendance();
         }
 
         if (!gotAttendance && (commands.contains("read") || commands.contains("r"))) {
