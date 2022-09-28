@@ -14,7 +14,7 @@ public class Scheduler {
 
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
-        inputReader = new BufferedReader(new FileReader("attendance.csv"));
+        inputReader = new BufferedReader(new FileReader(FILE_NAME));
         String firstLine = inputReader.readLine();
 
         if (firstLine.isBlank()) {
