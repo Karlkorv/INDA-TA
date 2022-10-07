@@ -10,7 +10,12 @@ public class Scheduler {
     private String[] attendance;
     private BufferedWriter writer;
     private BufferedReader inputReader;
+
     private static final String FILE_NAME = "attendance.csv";
+    private static final String GROUP_ARG = "-group";
+    private static final String GET_ARG = "-get";
+    private static final String READ_ARG = "-read";
+    private static final String TEMP_ARG = "-temp";
 
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
@@ -135,14 +140,14 @@ public class Scheduler {
 
         List<String> commands = new ArrayList<>(Arrays.asList(args));
 
-        if (commands.contains("-get")) {
+        if (commands.contains(GET_ARG)) {
             getAttendance();
             gotAttendance = true;
             writeAttendance();
         }
 
-        if (commands.contains("-temp")) {
-            int index = commands.indexOf("-temp");
+        if (commands.contains(TEMP_ARG)) {
+            int index = commands.indexOf(TEMP_ARG);
             String nextArg = commands.get(++index);
             while (nextArg.charAt(0) != '-') {
                 attendingStudents.add(nextArg);
@@ -151,18 +156,18 @@ public class Scheduler {
             }
         }
 
-        if (!gotAttendance && (commands.contains("-read") || commands.contains("--r"))) {
+        if (!gotAttendance && (commands.contains(READ_ARG))) {
             readAttendance();
             gotAttendance = true;
         }
 
-        if (commands.contains("-group")) {
+        if (commands.contains(GROUP_ARG)) {
             if (!gotAttendance) {
                 System.out.println("No attendance method specified, reading last");
                 readAttendance();
                 gotAttendance = true;
             }
-            int groupAmount = Integer.parseInt(commands.get(commands.indexOf("-group") + 1));
+            int groupAmount = Integer.parseInt(commands.get(commands.indexOf(GROUP_ARG) + 1));
             randomStudent(groupAmount);
         }
 
