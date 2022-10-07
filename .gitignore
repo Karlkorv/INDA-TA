@@ -8,3 +8,4 @@ test*
 ovningar
 *.pdf
 .DS_Store
+*.vscode
