@@ -131,30 +131,41 @@ public class Scheduler {
         boolean gotAttendance = false;
 
         // Command precedence:
-        // -get, -read/-r, -group
+        // -get, -read/-r, -group, -temp
 
         List<String> commands = new ArrayList<>(Arrays.asList(args));
 
-        if (commands.contains("get")) {
+        if (commands.contains("-get")) {
             getAttendance();
             gotAttendance = true;
             writeAttendance();
         }
 
-        if (!gotAttendance && (commands.contains("read") || commands.contains("r"))) {
+        if (commands.contains("-temp")) {
+            int index = commands.indexOf("-temp");
+            String nextArg = commands.get(++index);
+            while (nextArg.charAt(0) != '-') {
+                attendingStudents.add(nextArg);
+                if (index + 1 != args.length)
+                    nextArg = commands.get(++index);
+            }
+        }
+
+        if (!gotAttendance && (commands.contains("-read") || commands.contains("--r"))) {
             readAttendance();
             gotAttendance = true;
         }
 
-        if (commands.contains("group")) {
+        if (commands.contains("-group")) {
             if (!gotAttendance) {
                 System.out.println("No attendance method specified, reading last");
                 readAttendance();
                 gotAttendance = true;
             }
-            int groupAmount = Integer.parseInt(commands.get(commands.indexOf("group") + 1));
+            int groupAmount = Integer.parseInt(commands.get(commands.indexOf("-group") + 1));
             randomStudent(groupAmount);
         }
+
     }
 
     private void printHelp() {
