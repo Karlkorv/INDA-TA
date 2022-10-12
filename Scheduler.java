@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 public class Scheduler {
     private List<String> students;
     private List<String> attendingStudents;
@@ -74,6 +76,9 @@ public class Scheduler {
         }
 
         String[] splitLine = curLine.split(",");
+
+        if (splitLine.length != students.size())
+            throw new RuntimeException("Split attendance line length not equal to student amount");
 
         for (int i = 0; i < students.size(); i++) {
             if (splitLine[i].equals("y")) {
