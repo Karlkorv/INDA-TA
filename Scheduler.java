@@ -19,6 +19,12 @@ public class Scheduler {
     private static final String READ_ARG = "-read";
     private static final String TEMP_ARG = "-temp";
 
+    /**
+     * Skapar en ny instans av Scheduler. Läser in studenterna från en CSV-fil.
+     * 
+     * @throws IOException kastas om det uppstår ett problem med att läsa in
+     *                     CSV-filen
+     */
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
         inputReader = new BufferedReader(new FileReader(FILE_NAME));
@@ -37,6 +43,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Låter användaren mata in närvaro för varje student.
+     * 
+     * @throws IOException kastas om det uppstår ett problem med att läsa inmatning
+     *                     från användaren
+     */
     public void getAttendance() throws IOException {
         attendance = new String[students.size()];
         inputReader = new BufferedReader(new InputStreamReader(System.in));
@@ -56,6 +68,9 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Läser in närvaro från en CSV-fil.
+     */
     public void readAttendance() {
         String curLine = "";
         try {
@@ -87,6 +102,13 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Skriver närvaro till CSV-filen.
+     * 
+     * @throws IOException kastas om det uppstår ett problem med att skriva till
+     *                     CSV-filen
+     * 
+     */
     public void writeAttendance() throws IOException {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
@@ -100,6 +122,9 @@ public class Scheduler {
         writer.close();
     }
 
+    /**
+     * Skriver ut en slumpmässig student från listan över alla studenterna.
+     */
     public void randomStudent() {
         List<String> listCopy = new ArrayList<>(students); // Copy of, not reference to
         Collections.shuffle(listCopy);
@@ -108,6 +133,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Delar upp närvarande studenter i slumpmässiga grupper och skriver ut
+     * grupperna.
+     * 
+     * @param studentPerGroup antalet studenter per grupp
+     */
     public void randomStudent(int studentPerGroup) {
         Collections.shuffle(attendingStudents);
         int nrOfGroups = attendingStudents.size() / studentPerGroup;
@@ -132,6 +163,14 @@ public class Scheduler {
         }
     }
 
+    /**
+     * Hanterar argumenten som skickats till programmet och kallar på lämpliga
+     * metoder.
+     * 
+     * @param args argumenten som skickats till programmet
+     * @throws IOException kastas om det uppstår ett problem med att läsa eller
+     *                     skriva till CSV-filen
+     */
     private void parseCommands(String[] args) throws IOException {
         if (args.length == 0) {
             printHelp();
@@ -178,9 +217,18 @@ public class Scheduler {
 
     }
 
+    /**
+     * Skriver ut hjälpmeddelanden för användaren.
+     */
     private void printHelp() {
     }
 
+    /**
+     * Main-metoden för programmet. Skapar en instans av Scheduler och anropar
+     * parseCommands med argumenten som skickats till programmet.
+     * 
+     * @param args argumenten som skickats till programmet
+     */
     public static void main(String[] args) {
         try {
             Scheduler scheduler = new Scheduler();
@@ -190,5 +238,4 @@ public class Scheduler {
             System.exit(-1);
         }
     }
-
 }
