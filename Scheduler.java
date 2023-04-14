@@ -20,10 +20,10 @@ public class Scheduler {
     private static final String TEMP_ARG = "-temp";
 
     /**
-     * Skapar en ny instans av Scheduler. Läser in studenterna från en CSV-fil.
      * 
-     * @throws IOException kastas om det uppstår ett problem med att läsa in
-     *                     CSV-filen
+     * Creates a new instance of Scheduler. Reads in the students from a CSV file.
+     * 
+     * @throws IOException thrown if there is a problem reading the CSV file
      */
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
@@ -44,10 +44,10 @@ public class Scheduler {
     }
 
     /**
-     * Låter användaren mata in närvaro för varje student.
      * 
-     * @throws IOException kastas om det uppstår ett problem med att läsa inmatning
-     *                     från användaren
+     * Lets the user input attendance for each student.
+     * 
+     * @throws IOException thrown if there is a problem reading user input
      */
     public void getAttendance() throws IOException {
         attendance = new String[students.size()];
@@ -69,7 +69,8 @@ public class Scheduler {
     }
 
     /**
-     * Läser in närvaro från en CSV-fil.
+     * 
+     * Reads in attendance from a CSV file.
      */
     public void readAttendance() {
         String curLine = "";
@@ -103,11 +104,10 @@ public class Scheduler {
     }
 
     /**
-     * Skriver närvaro till CSV-filen.
      * 
-     * @throws IOException kastas om det uppstår ett problem med att skriva till
-     *                     CSV-filen
+     * Writes attendance to the CSV file.
      * 
+     * @throws IOException thrown if there is a problem writing to the CSV file
      */
     public void writeAttendance() throws IOException {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
@@ -123,7 +123,8 @@ public class Scheduler {
     }
 
     /**
-     * Skriver ut en slumpmässig student från listan över alla studenterna.
+     * 
+     * Prints a random student from the list of all students.
      */
     public void randomStudent() {
         List<String> listCopy = new ArrayList<>(students); // Copy of, not reference to
@@ -134,10 +135,10 @@ public class Scheduler {
     }
 
     /**
-     * Delar upp närvarande studenter i slumpmässiga grupper och skriver ut
-     * grupperna.
      * 
-     * @param studentPerGroup antalet studenter per grupp
+     * Divides attending students into random groups and prints the groups.
+     * 
+     * @param studentPerGroup the number of students per group
      */
     public void randomStudent(int studentPerGroup) {
         Collections.shuffle(attendingStudents);
@@ -164,12 +165,12 @@ public class Scheduler {
     }
 
     /**
-     * Hanterar argumenten som skickats till programmet och kallar på lämpliga
-     * metoder.
      * 
-     * @param args argumenten som skickats till programmet
-     * @throws IOException kastas om det uppstår ett problem med att läsa eller
-     *                     skriva till CSV-filen
+     * Handles the arguments sent to the program and calls the appropriate methods.
+     * 
+     * @param args the arguments sent to the program
+     * @throws IOException thrown if there is a problem reading or writing to the
+     *                     CSV file
      */
     private void parseCommands(String[] args) throws IOException {
         if (args.length == 0) {
@@ -218,16 +219,18 @@ public class Scheduler {
     }
 
     /**
-     * Skriver ut hjälpmeddelanden för användaren.
+     * 
+     * Prints out help messages for the user.
      */
     private void printHelp() {
     }
 
     /**
-     * Main-metoden för programmet. Skapar en instans av Scheduler och anropar
-     * parseCommands med argumenten som skickats till programmet.
      * 
-     * @param args argumenten som skickats till programmet
+     * Main method for the program. Creates an instance of Scheduler and calls
+     * parseCommands with the arguments sent to the program.
+     * 
+     * @param args the arguments sent to the program
      */
     public static void main(String[] args) {
         try {
