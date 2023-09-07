@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
 
 public class Scheduler {
     private List<String> students;
@@ -156,8 +155,11 @@ public class Scheduler {
             String nextArg = commands.get(++index);
             while (nextArg.charAt(0) != '-') {
                 attendingStudents.add(nextArg);
-                if (index + 1 != args.length)
+                if (index + 1 != args.length) {
                     nextArg = commands.get(++index);
+                } else {
+                    break;
+                }
             }
         }
 
@@ -179,6 +181,7 @@ public class Scheduler {
     }
 
     private void printHelp() {
+        System.out.println("Här borde det finnas lite vettig info");
     }
 
     public static void main(String[] args) {
