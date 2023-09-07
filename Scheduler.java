@@ -18,6 +18,12 @@ public class Scheduler {
     private static final String READ_ARG = "-read";
     private static final String TEMP_ARG = "-temp";
 
+    /**
+     * 
+     * Creates a new instance of Scheduler. Reads in the students from a CSV file.
+     * 
+     * @throws IOException thrown if there is a problem reading the CSV file
+     */
     public Scheduler() throws IOException {
         attendingStudents = new ArrayList<>();
         inputReader = new BufferedReader(new FileReader(FILE_NAME));
@@ -36,6 +42,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * 
+     * Lets the user input attendance for each student.
+     * 
+     * @throws IOException thrown if there is a problem reading user input
+     */
     public void getAttendance() throws IOException {
         attendance = new String[students.size()];
         inputReader = new BufferedReader(new InputStreamReader(System.in));
@@ -55,6 +67,10 @@ public class Scheduler {
         }
     }
 
+    /**
+     * 
+     * Reads in attendance from a CSV file.
+     */
     public void readAttendance() {
         String curLine = "";
         try {
@@ -86,6 +102,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * 
+     * Writes attendance to the CSV file.
+     * 
+     * @throws IOException thrown if there is a problem writing to the CSV file
+     */
     public void writeAttendance() throws IOException {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
@@ -99,6 +121,10 @@ public class Scheduler {
         writer.close();
     }
 
+    /**
+     * 
+     * Prints a random student from the list of all students.
+     */
     public void randomStudent() {
         List<String> listCopy = new ArrayList<>(students); // Copy of, not reference to
         Collections.shuffle(listCopy);
@@ -107,6 +133,12 @@ public class Scheduler {
         }
     }
 
+    /**
+     * 
+     * Divides attending students into random groups and prints the groups.
+     * 
+     * @param studentPerGroup the number of students per group
+     */
     public void randomStudent(int studentPerGroup) {
         Collections.shuffle(attendingStudents);
         int nrOfGroups = attendingStudents.size() / studentPerGroup;
@@ -131,6 +163,14 @@ public class Scheduler {
         }
     }
 
+    /**
+     * 
+     * Handles the arguments sent to the program and calls the appropriate methods.
+     * 
+     * @param args the arguments sent to the program
+     * @throws IOException thrown if there is a problem reading or writing to the
+     *                     CSV file
+     */
     private void parseCommands(String[] args) throws IOException {
         if (args.length == 0) {
             printHelp();
@@ -180,10 +220,21 @@ public class Scheduler {
 
     }
 
+    /**
+     * 
+     * Prints out help messages for the user.
+     */
     private void printHelp() {
         System.out.println("Här borde det finnas lite vettig info");
     }
 
+    /**
+     * 
+     * Main method for the program. Creates an instance of Scheduler and calls
+     * parseCommands with the arguments sent to the program.
+     * 
+     * @param args the arguments sent to the program
+     */
     public static void main(String[] args) {
         try {
             Scheduler scheduler = new Scheduler();
@@ -193,5 +244,4 @@ public class Scheduler {
             System.exit(-1);
         }
     }
-
 }
