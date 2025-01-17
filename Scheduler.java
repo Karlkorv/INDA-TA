@@ -2,8 +2,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-
 
 public class Scheduler {
     private List<String> students;
@@ -92,10 +92,10 @@ public class Scheduler {
 
         String[] splitLine = curLine.split(",");
 
-        if (splitLine.length != students.size())
+        if (splitLine.length != students.size() + 1) // + 1 due to date
             throw new RuntimeException("Split attendance line length not equal to student amount");
 
-        for (int i = 0; i < students.size(); i++) {
+        for (int i = 1; i < students.size(); i++) { // i = 1 since first index is date
             if (splitLine[i].equals("y")) {
                 attendingStudents.add(students.get(i)); // Add all students from last recorded attendance
             }
@@ -112,6 +112,9 @@ public class Scheduler {
         writer = new BufferedWriter(new FileWriter(FILE_NAME, true)); // Append flag = true
 
         writer.newLine();
+
+        // write the current date in MM-DD format
+        writer.write(new Date().toString().substring(4, 10) + ",");
 
         for (int i = 0; i < attendance.length; i++) {
             writer.write(attendance[i]);
@@ -180,7 +183,7 @@ public class Scheduler {
         boolean gotAttendance = false;
 
         // Command precedence:
-        // -get, -read/-r, -group, -temp
+        // -get, -temp, -read/-r, -group
 
         List<String> commands = new ArrayList<>(Arrays.asList(args));
 
