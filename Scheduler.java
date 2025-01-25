@@ -97,7 +97,7 @@ public class Scheduler {
 
         for (int i = 1; i < students.size(); i++) { // i = 1 since first index is date
             if (splitLine[i].equals("y")) {
-                attendingStudents.add(students.get(i)); // Add all students from last recorded attendance
+                attendingStudents.add(students.get(i - 1)); // Add all students from last recorded attendance
             }
         }
     }
